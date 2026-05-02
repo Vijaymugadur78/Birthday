@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Thanu’s Birthday 💖</title>
+
+<style>
+body{margin:0;font-family:Segoe UI,sans-serif;background:#0b1220;color:#fff;overflow:hidden}
+.center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
+.hidden{display:none}
+button{padding:12px;border:none;border-radius:10px;font-size:16px;margin:5px;background:#ff4d6d;color:#fff;cursor:pointer}
+
+h1{font-size:3em}
+
+/* CAKE */
+.cake-box{margin-top:20px}
+.candle{font-size:30px;display:block}
+.big-cake{font-size:120px;cursor:pointer;transition:.3s}
+.hidden{display:none}
+.big-cake:hover{transform:scale(1.1)}
+
+/* blow candles */
+.blow{animation:fadeOut 1s forwards}
+@keyframes fadeOut{to{opacity:0}}
+
+/* cut animation */
+.cut{animation:cut 0.6s ease}
+@keyframes cut{
+0%{transform:scale(1)}
+50%{transform:scale(1.2) rotate(10deg)}
+100%{transform:scale(1) rotate(-10deg)}
+}
+
+/* boom */
+.boom{position:absolute;font-size:25px;animation:boom 1s ease-out forwards}
+@keyframes boom{0%{transform:scale(1);opacity:1}100%{transform:scale(3);opacity:0}}
+
+.popup{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.8);display:flex;justify-content:center;align-items:center;z-index:10}
+.popup-box{background:#111827;padding:25px;border-radius:20px;text-align:center;max-width:320px}
+#photoSection, #videoSection, #voiceSection, #musicSection{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(255,255,255,.05);padding:20px;border-radius:20px;box-shadow:0 0 30px rgba(255,77,109,.15);text-align:center;max-width:400px}
+.media-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:10px 0}
+.media-row img{width:110px;height:110px;border-radius:15px;object-fit:cover;border:2px solid #ff4d6d}
+video, audio{margin-top:10px;border-radius:15px;outline:none}
+#video-message{margin:10px 0;color:#f7bbd2}
+.hidden{display:none}
+</style>
+</head>
+
+<body>
+
+<div class="center" id="login">
+  <h2>Enter Password 💖</h2>
+  <input type="password" id="password" />
+  <br>
+  <button onclick="checkPassword()">Unlock</button>
+</div>
+
+<div class="center hidden" id="main">
+  <h1>🎉 Happy Birthday Thanu 🎉</h1>
+  <p>Make a wish... 💫</p>
+
+  <div class="cake-box">
+    <div id="candle" class="candle">🕯️🕯️🕯️</div>
+    <div id="cake" class="big-cake" onclick="cutCake()">🎂</div>
+  </div>
+
+  <button onclick="blowCandle()">💨 Blow Candle</button>
+  <button onclick="showPhotos()">📷 Photos</button>
+  <button onclick="showVideo()">🎥 Video</button>
+  <button onclick="showVoice()">🎤 Voice</button>
+  <button onclick="showMusic()">🎵 Music</button>
+  
+
+
+  <div id="photoSection" class="hidden">
+    <h2>Photos</h2>
+    <div class="media-row">
+      <img src="photo1.jpg" alt="Photo 1" />
+      <img src="photo2.jpg" alt="Photo 2" />
+      <img src="photo3.jpg" alt="Photo 3" />
+    </div>
+    <button onclick="closePhotos()">Close Photos</button>
+  </div>
+
+  <div id="videoSection" class="hidden">
+    <h2>Video</h2>
+    <video id="video" controls width="320">
+      <source src="your-video.mp4" type="video/mp4" />
+      Your browser does not support the video tag.
+    </video>
+    <p id="video-message" class="hidden">Video coming soon! Add a file named <strong>your-video.mp4</strong> to show it here.</p>
+    <button onclick="closeVideo()">Close Video</button>
+  </div>
+
+  <div id="voiceSection" class="hidden">
+    <h2>🎤 Voice Message</h2>
+    <audio id="voiceAudio" controls style="width:100%;max-width:300px">
+      <source src="your-voice.mp3" type="audio/mpeg" />
+      Your browser does not support the audio element.
+    </audio>
+    <p id="voice-message" class="hidden">Voice message coming soon! Add a file named <strong>your-voice.mp3</strong> to show it here.</p>
+    <button onclick="closeVoice()">Close Voice</button>
+  </div>
+</div>
+<div id="musicSection" class="hidden">
+    <h2>🎵 Music</h2>
+    <audio id="musicPlayer" controls style="width:100%;max-width:300px">
+      <source src="your-music.mpeg" type="audio/mpeg" />
+      <source src="your-music.mp3" type="audio/mpeg" />
+      <source src="your-music" type="audio/mpeg" />
+      Your browser does not support the audio element.
+    </audio>
+    <p id="music-message">Add a file named <strong>your-music.mpeg</strong>, <strong>your-music.mp3</strong>, or <strong>your-music</strong> to play your music here.</p>
+    <button onclick="closeMusic()">Close Music</button>
+  </div>
+
+<div id="popup" class="popup hidden">
+  <div class="popup-box">
+    <h3>💖 A Message Just For You 💖</h3>
+    <p>Happy Birthday my dera Thanu ❤️ You mean everything to me.</p>
+    <button onclick="closePopup()">Close</button>
+  </div>
+</div>
+
+<audio id="cutSound" src="https://www.soundjay.com/buttons/sounds/button-16.mp3"></audio>
+
+<script>
+const correctPassword="Thanu";
+let candleBlown=false;
+
+function checkPassword(){
+  if(password.value===correctPassword){
+    login.classList.add('hidden');
+    main.classList.remove('hidden');
+  } else alert('Wrong password 😢');
+}
+
+
+function blowCandle(){
+  candle.classList.add('blow');
+  candleBlown=true;
+}
+
+function cutCake(){
+  if(!candleBlown){
+    alert("Blow the candle first 💨");
+    return;
+  }
+
+  cake.classList.add('cut');
+  cutSound.play();
+  boomEffect();
+
+  setTimeout(()=>{
+    popup.classList.remove('hidden');
+    cake.classList.remove('cut');
+    setTimeout(()=>{
+      popup.classList.add('hidden');
+    }, 2000);
+  },700);
+}
+
+function closePopup(){ popup.classList.add('hidden'); }
+
+function showPhotos(){
+  photoSection.classList.remove('hidden');
+  videoSection.classList.add('hidden');
+  document.getElementById('video-message').classList.add('hidden');
+  voiceSection.classList.add('hidden');
+}
+
+function closePhotos(){
+  photoSection.classList.add('hidden');
+}
+
+function showVideo(){
+  photoSection.classList.add('hidden');
+  videoSection.classList.remove('hidden');
+  voiceSection.classList.add('hidden');
+  if(video.canPlayType('video/mp4')){
+    video.classList.remove('hidden');
+    document.getElementById('video-message').classList.add('hidden');
+  } else {
+    video.classList.add('hidden');
+    document.getElementById('video-message').classList.remove('hidden');
+  }
+}
+
+function closeVideo(){
+  videoSection.classList.add('hidden');
+}
+
+function showVoice(){
+  photoSection.classList.add('hidden');
+  videoSection.classList.add('hidden');
+  voiceSection.classList.remove('hidden');
+}
+
+function closeVoice(){
+  voiceSection.classList.add('hidden');
+}
+
+function showMusic(){
+  photoSection.classList.add('hidden');
+  videoSection.classList.add('hidden');
+  voiceSection.classList.add('hidden');
+  musicSection.classList.remove('hidden');
+
+  const musicPlayer = document.getElementById('musicPlayer');
+  musicPlayer.load();
+  musicPlayer.play().catch(() => {});
+}
+
+function closeMusic(){
+  musicSection.classList.add('hidden');
+}
+
+function boomEffect(){
+  for(let i=0;i<25;i++){
+    let b=document.createElement('div');
+    b.className='boom';
+    b.innerHTML=['💥','🎉','✨','💖','🎊'][Math.floor(Math.random()*5)];
+    b.style.left=Math.random()*100+'%';
+    b.style.top=Math.random()*100+'%';
+    document.body.appendChild(b);
+    setTimeout(()=>b.remove(),1000);
+  }
+}
+</script>
+
+</body>
+</html>
